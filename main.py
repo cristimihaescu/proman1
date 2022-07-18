@@ -32,7 +32,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         user = queries.get_user_by_username(username)
-        if user is not None:
+        if user!=[] :
             return render_template("register.html", check=3)
         queries.add_new_user(username, password)
         return render_template("register.html", check=2)
