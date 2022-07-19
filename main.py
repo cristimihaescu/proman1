@@ -22,7 +22,8 @@ def index():
     if "username" in session:
         username = escape(session["username"])
         user = queries.get_user_by_username(escape(session["username"]))
-        return render_template("index.html", name=username)
+        boards=queries.get_boards()
+        return render_template("index.html", name=username,boards=boards)
     return redirect(url_for('login'))
 
 
@@ -32,7 +33,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         user = queries.get_user_by_username(username)
-        if user!=[] :
+        if user:
             return render_template("register.html", check=3)
         queries.add_new_user(username, password)
         return render_template("register.html", check=2)
@@ -45,7 +46,7 @@ def login():
         form_email = request.form["username"]
         form_password = request.form["password"]
         user = queries.get_user_by_username(form_email)
-        if user == []:
+        if not user:
             return render_template("login.html", errorMessage=True)
         if util.verify_password(form_password, user[0].get("password")):
             session["username"] = user[0].get("username")
