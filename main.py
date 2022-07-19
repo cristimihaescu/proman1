@@ -13,7 +13,7 @@ def index():
     """
     This is a one-pager which shows all the boards and cards
     """
-    return render_template('index.html')
+    return render_template('index.html')s
 
 
 @app.route("/api/boards")
