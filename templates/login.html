@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function myFunction() {
+            document.getElementById("register").submit();
+        }
+    </script>
+    <style>
+        .content {
+            max-width: 500px;
+            margin: auto;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 300;
+            font-size: 2.2em;
+            color: Black;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+            padding-top: 180px;
+            text-align: center;
+            position: center;
+            top: 0px;
+
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body style="background-color:#5a69ea">
+<form action="/login" method="post">
+    <div class="content">
+        <h1>Please login</h1>
+        <label for="username">Username : </label>
+        <input required type="text" name="username" id="username"/><br>
+
+        <label for="password">Password: </label>
+        <input required type="password" name="password" id="password"/><br>
+
+        <input class="btn btn-primary" role="button"
+               type="submit"
+               value="Submit">
+
+        {% if errorMessage == True %}
+            {#        <span style="color: red">Invalid login attempt</span>#}
+            <script>
+                alert('Invalid credentials !')
+            </script>
+        {% endif %}
+        <div>
+            <span>No account?</span>
+            <a href="{{ url_for('register') }}">Register</a>
+        </div>
+    </div>
+</form>
+</body>
+</html>

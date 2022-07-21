@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Register page</title>
+</head>
+<body style="background-color:#5a69ea" onload=checkFunction({{ check }})>
+<div class="container">
+    <br>
+    <h1>Register</h1>
+    <br>
+    <form action="/register" method="post">
+        <div class="register_form">
+            <label for="username"><b>Username:</b></label>
+            <input type="text" placeholder="Enter Username" name="username" id="username" required>
+            <label for="password"><b>Password:</b></label>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
+            <br>
+            <br>
+            <button onclick="Alert()">Register</button>
+        </div>
+
+        <div>
+            <br>
+            <p>Already have an account? <a class="btn btn-primary" href="/">Sign in</a></p>
+            <script>
+                function Alert(check) {
+                    const username = document.getElementById('username')
+                    const password = document.getElementById('password')
+
+                    if (username.value != null && password.valueOf != null
+                        && username.value !== '' && password.value !== '') {
+                        console.log('success')
+                    } else {
+                        alert('Please, fill in all fields');
+                    }
+                    return false;
+                }
+
+
+                function checkFunction(check) {
+                    if (check == 2) {
+                        alert('Successful registration. Log in to continue.');
+                        window.location = '/login';
+                    } else if (check == 3) {
+                        alert('Username already exists, please choose another one! ')
+                    }
+                }
+
+            </script>
+        </div>
+    </form>
+</div>
+</body>
+</html>
