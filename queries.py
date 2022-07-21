@@ -154,7 +154,6 @@ def update_status_title(status_id, title):
     return data_manager.execute_select(query, fetchall=False)
 
 
-
 def update_card_status(data, card_id):
     query = sql.SQL("""
         UPDATE cards
@@ -187,7 +186,6 @@ def setNewUser(username, password):
         """,
         {"username": username, "password": hash_password(password)},
     )
-
 
 
 def get_public_boards():
