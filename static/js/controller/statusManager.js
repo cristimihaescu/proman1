@@ -2,7 +2,6 @@ import {dataHandler} from "../data/dataHandler.js";
 import {createStatusBoxes, deleteStatus} from "../model/status.js";
 import {cardsManager} from "./cardsManager.js";
 import {addNewCard} from "../model/cards.js";
-//s
 
 async function statusBoardManager(board) {
     const boardId = board.id;
