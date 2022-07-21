@@ -119,14 +119,52 @@ def connect_status_with_board(data):
     return data_manager.execute_select(query)
 
 
+def create_new_card(data):
+    query = sql.SQL("""
+        insert into cards
+        (board_id, status_id, title, card_order)
+        values({board_id}, {status_id}, {title}, {card_order})
+        returning *
+    """).format(board_id=sql.Literal(data["board_id"]),
+                status_id=sql.Literal(data["status_id"]),
+                title=sql.Literal(data["title"]),
+                card_order=sql.Literal(data["order"]))
+    return data_manager.execute_select(query, fetchall=False)
+
+
 def set_cards_order(cards_data):
     query = sql.SQL("""
         UPDATE cards
         SET card_order = {new_order}
         WHERE id = {id}
-        RETURNING id, card_order, title 
+        RETURNING id, card_order, title
     """).format(id=sql.Literal(cards_data["id"]),
                 new_order=sql.Literal(cards_data["order"]))
+    return data_manager.execute_select(query, fetchall=False)
+
+
+def update_status_title(status_id, title):
+    query = sql.SQL("""
+    UPDATE statuses
+    SET title = {title}
+    WHERE id = {status_id}
+    RETURNING *
+    """).format(status_id=sql.Literal(status_id),
+                title=sql.Literal(title))
+    return data_manager.execute_select(query, fetchall=False)
+
+
+
+def update_card_status(data, card_id):
+    query = sql.SQL("""
+        UPDATE cards
+        SET board_id = {new_board_id},
+            status_id = {new_status_id}
+        WHERE id = {card_id}
+        RETURNING *
+    """).format(new_board_id=sql.Literal(data["board_id"]),
+                new_status_id=sql.Literal(data["status_id"]),
+                card_id=sql.Literal(card_id))
     return data_manager.execute_select(query, fetchall=False)
 
 
@@ -151,18 +189,10 @@ def setNewUser(username, password):
     )
 
 
-def get_password_hash(user_id):
-    query = sql.SQL("""
-        SELECT password FROM users
-        WHERE id = {user_id} 
-    """).format(user_id=sql.Literal(user_id))
-    return data_manager.execute_select(query, fetchall=False)
-
 
 def get_public_boards():
     query = sql.SQL("""
         SELECT * FROM boards
-        where private = false or private is null 
     """)
     return data_manager.execute_select(query)
 
@@ -170,21 +200,9 @@ def get_public_boards():
 def get_boards_by_user_id(user_id):
     query = sql.SQL("""
         SELECT * FROM boards
-        WHERE private = FALSE OR  user_id = {user_id} OR private is null
+        user_id = {user_id}
     """).format(user_id=sql.Literal(user_id))
     return data_manager.execute_select(query)
-
-
-def set_board_to_private(user_id, board_id):
-    query = sql.SQL("""
-    UPDATE boards
-        SET user_id = {user_id},
-            private = true
-        WHERE id = {board_id} 
-        RETURNING *
-    """).format(user_id=sql.Literal(user_id),
-                board_id=sql.Literal(board_id))
-    return data_manager.execute_select(query, fetchall=False)
 
 
 def delete_status_by_board_id(board_id):
