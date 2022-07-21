@@ -1,5 +1,5 @@
 import { boardsManager } from "./controller/boardsManager.js";
-import {addEventOnBin, setUpDropTargets} from "./model/cards.js";
+import {addEventOnBin} from "./model/cards.js";
 import util from "./util/util.js";
 
 async function init() {
