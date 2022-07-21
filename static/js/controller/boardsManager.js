@@ -4,7 +4,7 @@ import {
     addNewBoard,
     renameBoard,
     getBoardsByUser,
-    deleteBoard``
+    deleteBoard,
 } from "../model/board.js";
 import statusBoardManager from "./statusManager.js";
 import {addNewStatus} from "../model/status.js";
