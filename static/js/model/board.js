@@ -1,12 +1,12 @@
 import {dataHandler} from "../data/dataHandler.js";
-import {htmlFactory, htmlTemplates, formBuilder, errorBlock} from "../view/htmlFactory.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
 import util from "../util/util.js";
-import {createStatusBoxes, addNewStatus, deleteStatus } from "./status.js";
+import {createStatusBoxes, deleteStatus} from "./status.js";
 import {showHideButtonHandler} from "../controller/boardsManager.js";
 import {addNewCard, initContainerForDragEvents} from "./cards.js";
 
-export {addNewBoard, removeBoard, renameBoard, createRegistrationWindow, handleLogout, createLoginWindow, getBoardsByUser, handleWrapper, deleteBoard};
+export {addNewBoard, removeBoard, renameBoard, getBoardsByUser, handleWrapper, deleteBoard};
 
 
 function addNewBoard(e) {
@@ -19,17 +19,17 @@ function addNewBoard(e) {
     });
 }
 
-function nameNewBoard(isPrivate=false) {
+function nameNewBoard() {
     const headline = document.querySelector('div[data-board-id="pending_board"]');
     headline.innerHTML = `<input type="text" name="board_name" id="name_new_board">`;
     const input = document.querySelector("#name_new_board");
-    const handleSave = setUpHandleInputSave(isPrivate)
+    const handleSave = setUpHandleInputSave()
     input.addEventListener("keydown", handleSave);
     input.focus();
     util.wait(100).then(() => document.body.addEventListener('click', clickOutside));
 }
 
-function setUpHandleInputSave(isPrivate=false){
+function setUpHandleInputSave() {
 
     async function handleInputSaveBoardName(e) {
         const board = document.querySelector('div [data-board-id="pending_board"]');
@@ -43,16 +43,16 @@ function setUpHandleInputSave(isPrivate=false){
                 e.currentTarget.classList.add("error");
                 myInput.closest("div").classList.add("error");
             } else {
-                const boardData = await createNewBoard(newName, myInput, board);
-                isPrivate ? await dataHandler.setBoardToPrivate(boardData.id, await dataHandler.getUserId()) : "";
+                await createNewBoard(newName, myInput, board);
             }
         }
     }
-   return handleInputSaveBoardName
+
+    return handleInputSaveBoardName
 }
 
 
-async function createNewBoard(newName, myInput, board){
+async function createNewBoard(newName, myInput, board) {
     const newBoardButton = document.querySelector('button[class="toggle-board-button"][data-board-id="pending_board"]');
     const newStatusButton = document.querySelector('.add-new-status-button[data-board-id="pending_board"]');
     const newDeleteButton = document.querySelector('.delete-board[data-board-id="pending_board"]');
@@ -87,25 +87,25 @@ async function setStatusBaseContent(board, boardId) {
     setUpBoardListeners(myBoardContainer, myStatusContainer);
 }
 
-function setUpBoardListeners(myBoardContainer, myStatusContainer){
+function setUpBoardListeners(myBoardContainer, myStatusContainer) {
     const boardElementsObj = getBoardElementsObj(myBoardContainer, myStatusContainer);
     setUpBoardEvents(boardElementsObj)
     myStatusContainer.classList.add("invisible");
 }
 
-function getBoardElementsObj(myBoardContainer, myStatusContainer){
-    const boardObj = {addNewStatusBtn: myBoardContainer.querySelector(".add-new-status-button"),
-                    toggleBStatusBtn: myBoardContainer.querySelector(".toggle-board-button"),
-                    cardHandlers: myStatusContainer.querySelectorAll(".status-col"),
-                    deleteButton: myBoardContainer.querySelector('.delete-board'),
-                    cardLinks: myStatusContainer.querySelectorAll(".new-card-link"),
-                    deleteStatusLinks: myStatusContainer.querySelectorAll(".delete-status")}
+function getBoardElementsObj(myBoardContainer, myStatusContainer) {
+    const boardObj = {
+        toggleBStatusBtn: myBoardContainer.querySelector(".toggle-board-button"),
+        cardHandlers: myStatusContainer.querySelectorAll(".status-col"),
+        deleteButton: myBoardContainer.querySelector('.delete-board'),
+        cardLinks: myStatusContainer.querySelectorAll(".new-card-link"),
+        deleteStatusLinks: myStatusContainer.querySelectorAll(".delete-status")
+    }
     return boardObj;
 }
 
-function setUpBoardEvents(domObj){
+function setUpBoardEvents(domObj) {
     domObj.cardHandlers.forEach(handler => initContainerForDragEvents(handler));
-    domObj.addNewStatusBtn.addEventListener('click', addNewStatus);
     domObj.toggleBStatusBtn.addEventListener('click', showHideButtonHandler);
     domObj.deleteButton.addEventListener('click', deleteBoard);
     domObj.cardLinks.forEach(link => link.addEventListener('click', addNewCard));
@@ -175,73 +175,17 @@ function handleWrapper(currentName, target) {
             target.classList.remove("error");
         }
     }
+
     return handleRenameClickOutside;
 }
 
-function createRegistrationWindow(){
-    setUpPopupForm("Registration")
-}
-
-function createLoginWindow(){
-    setUpPopupForm("Login")
-}
-
-function setUpPopupForm(useCase){
-    const regPopup = formBuilder(useCase);
-    document.querySelector("#root").insertAdjacentHTML("beforebegin", regPopup);
-    const form = document.querySelector("form");
-    const popupOuter = document.querySelector(".popup-wrapper");
-    const popupBehaviour = useCase === "Registration"
-        ? setUpUserForm(dataHandler.postRegistrationData, getFormErrorMessages("Registration"))
-        : setUpUserForm(dataHandler.handleLogin, getFormErrorMessages("Login"));
-    form.addEventListener("submit", popupBehaviour);
-    popupOuter.addEventListener("click", (e)=> {
-        if (e.target === popupOuter){
-            document.querySelector(".popup-wrapper").remove();
-        }
-    })
-}
-
-function getFormErrorMessages(useCase){
-   return useCase === "Registration"
-       ? {firstError: "Both fields must be filled!", secondError: "This username already exists!"}
-       : {firstError: "Both fields must be filled!", secondError: "The username or password is incorrect!"};
-}
-
-
-function setUpUserForm(callback, messageObj){
-    async function handleForm(e){
-        e.preventDefault();
-        const [username, password] = [e.currentTarget.username, e.currentTarget.password];
-        if(username.value.length < 1 || password.value.length < 1){
-            handleFormError(messageObj.firstError)
-        } else {
-            const validUserResponse = await callback(username.value, password.value);
-            const isValidUsername = await validUserResponse.json(); // after refactoring we don't need this line
-            if(isValidUsername){
-                document.querySelector(".popup-wrapper").remove();
-                location.replace("/");
-            } else {
-                handleFormError(messageObj.secondError)
-            }
-        }
-    }
-    return handleForm
-}
-
-
-async function handleLogout(){
-    await dataHandler.handleLogout();
-    location.replace("/");
-}
-
-async function getBoardsByUser(){
+async function getBoardsByUser() {
     const isUserSignedIn = await dataHandler.getUserId();
     const boards = await dataHandler.getBoardsByUserId(isUserSignedIn);
     return boards;
 }
 
-async function deleteBoard(e){
+async function deleteBoard(e) {
     const boardId = e.currentTarget.dataset.boardId;
     const deleteButton = e.currentTarget;
     const boardDivToRemove = deleteButton.closest(".board-container");
