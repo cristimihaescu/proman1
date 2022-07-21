@@ -29,7 +29,6 @@ function insertNewCardToParent(parent, newCard) {
     card.querySelector('i').addEventListener('click', deleteCardFromDb);
 }
 
-// implement by the status and board cases
 async function handleInputSaveCard(e) {
     const myInput = e.currentTarget;
     if (e.key === "Escape") {
@@ -59,7 +58,7 @@ async function setUpNewCard(myInput) {
     const newName = myInput.value;
     const boardId = myInput.closest(".status-col").dataset.boardId;
     const statusId = myInput.closest(".status-col").dataset.statusId;
-    const newStatus = await dataHandler.createNewCard(newName, boardId, statusId, 1); //different datahandler func
+    const newStatus = await dataHandler.createNewCard(newName, boardId, statusId, 1);
     setCardHtmlData(newStatus, card, newName);
     await setNewCardOrder(card);
     document.body.removeEventListener("click", clickOutsideCard);
@@ -167,7 +166,6 @@ async function updateCardDropChanges(newData, isOldStatus) {
     if (isOldStatus) {
         await setNewCardOrder(card);
     } else {
-        await dataHandler.updateCardStatus(newData.newBoardId, newData.newStatusId, newData.cardId);
         await setNewCardOrder(card);
         const oldStatusCol = document.querySelector(`.status-col[data-status-id="${newData.statusId}"][data-board-id="${newData.boardId}"]`);
         const oldColFirstCard = oldStatusCol.firstElementChild;
