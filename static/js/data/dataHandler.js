@@ -4,32 +4,21 @@ export let dataHandler = {
         return response;
     },
     getBoard: async function (boardId) {
-        // the board is retrieved and then the callback function is called with the board
     },
     getStatuses: async function () {
         const response = await fetch("/api/get_statuses");
         return response;
 
-        // the statuses are retrieved and then the callback function is called with the statuses
     },
     getCardsByBoardId: async function (boardId) {
         const response = await apiGet(`/api/boards/${boardId}/cards/`);
         return response;
     },
     getCard: async function (cardId) {
-        // the card is retrieved and then the callback function is called with the card
     },
     createNewBoard: async function (boardTitle) {
-        // creates new board, saves it and calls the callback function with its data
         const response = await apiPost("/api/create_board", {title: `${boardTitle}`});
         return response;
-    },
-    setBoardToPrivate: async function (boardId, userId) {
-        const response = await apiPost("/api/set_board_to_private",
-            {board_id: `${boardId}`, user_id: `${userId}`});
-    },
-    createPrivateBoard: async function (boardTitle, userId) {
-        const response = await apiPost("/api/set_private_board", {});
     },
     renameCurrentCard: async function (newCardName, cardId) {
         const response = await fetch("/api/rename_card", {
@@ -48,7 +37,6 @@ export let dataHandler = {
         return await response.json();
     },
     createNewCard: async function (cardTitle, boardId, statusId, order) {
-        // creates new card, saves it and calls the callback function with its data
         const response = await apiPost("/api/create_new_card", {
             title: `${cardTitle}`,
             board_id: `${boardId}`,
@@ -61,14 +49,6 @@ export let dataHandler = {
         const response = await apiGet(`/api/get_statuses/${boardId}`);
         return response;
     },
-    updateStatusTitle: async function (statusId, title) {
-        const response = await fetch("/api/update_status_title", {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({status_id: `${statusId}`, title: `${title}`})
-        });
-        return response;
-    },
     bindStatusToBoard: async function (statusId, boardId) {
         const response = await fetch("/api/status_to_board", {
             method: "POST",
@@ -77,26 +57,7 @@ export let dataHandler = {
         });
         return response;
     },
-    updateStatusInStatusBoard: async function (newStatusId, columnId, boardID) {
-        const response = await fetch("/api/update_status_to_board", {
-            method: "POST",
-            headers: {'Content-Type': "application/json"},
-            body: JSON.stringify({new_status_id: `${newStatusId}`, column_id: `${columnId}`, board_id: `${boardID}`})
-        });
-        return response;
-    },
-    createNewStatus: async function (statusName) {
-        const response = await fetch("/api/create_status", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({title: `${statusName}`}),
-        });
-        return response;
-    },
-    // the statuses are retrieved and then the callback function is called with the statuses
-
     getStatus: async function (statusId) {
-        // the status is retrieved and then the callback function is called with the status
     },
     getDefaultStatuses: async function () {
         const response = await fetch("/api/get_default_statuses");
@@ -107,34 +68,6 @@ export let dataHandler = {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({cards: arrOfObj})
-        });
-        return response;
-    },
-    updateCardStatus: async function (boardId, statusId, cardId) {
-        const response = await fetch(`api/update_card_status/${cardId}`, {
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({board_id: `${boardId}`, status_id: `${statusId}`})
-        });
-        return response;
-    },
-    async postRegistrationData(username, password) {
-        const response = await fetch("/api/registration", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username: `${username}`, password: `${password}`})
-        });
-        return response;
-    },
-    async handleLogout() {
-        const response = await fetch("/api/logout");
-        return response;
-    },
-    handleLogin: async function (username, password) {
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username: `${username}`, password: `${password}`})
         });
         return response;
     },
