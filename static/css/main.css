@@ -1,12 +1,6 @@
 :root {
     --color-error: red;
-    --color-card-border: #d3d3d3;
-    --color-verylight-gray: #f4f0ec;
-    --color-cta-blue: #2e40b3;
     --base-font-size: 1rem;
-    --color-link-blue: rgb(93, 138, 255);
-    --color-cta-primary: #ff7f50;
-
 }
 
 body {
@@ -175,7 +169,7 @@ button {
 }
 
 .new-card-link {
-    color: var(--color-link-blue);
+    color: black;
 }
 
 .delete-status {
@@ -183,6 +177,7 @@ button {
     margin-top: 1rem;
     margin-bottom: 0;
     cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .card + .card {
