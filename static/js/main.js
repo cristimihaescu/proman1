@@ -1,7 +1,10 @@
-import {boardsManager} from "./controller/boardsManager.js";
+import { boardsManager } from "./controller/boardsManager.js";
+import {addEventOnBin} from "./model/cards.js";
+import util from "./util/util.js";
 
-function init() {
-    boardsManager.loadBoards();
+async function init() {
+  await boardsManager.loadBoards();
+  util.wait(300).then(() => addEventOnBin());
 }
 
-init();
+await init();

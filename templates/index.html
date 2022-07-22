@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1pL7SUc.woff2" rel="stylesheet">
     <title>ProMan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css"
+          integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css"
+          integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+
     <link rel="icon" type="image/png" sizes="32x32"
           href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="96x96"
@@ -15,26 +24,28 @@
           href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="https://kit.fontawesome.com/89941c44c6.js" crossorigin="anonymous"></script>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </head>
 <body>
-<div id="root"></div>
-<h1>hello {{ name }}</h1>
-    {% for board in boards %}
-        <details>
-        <summary>{{ board.title }}</summary>
-        </details>
-    {% endfor %}
-{#<details>#}
-{#    <summary>System Requirements</summary>#}
-{#    <p>Requires a computer running an operating system. The computer#}
-{#        must have some memory and ideally some kind of long-term storage.#}
-{#        An input device as well as some form of output device is#}
-{#        recommended.</p>#}
-{#</details>#}
+<nav>
+    <div class="wrapper">
+        <div class="logo"><span class="logo-first">Hello, </span><span class="logo-last">{{ username }}</span></div>
+        <div class="nav-buttons">
+            <button id="create_board" class="nav-button">Add new board</button>
+            {% if session['username'] %}
+                <form action="/logout" class="form-inline my-2 my-lg-0 flex-g-1">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
+                </form>
+            {% else %}
+                <button id="login" class="nav-button">Login</button>
+                <button id="register" class="nav-button">Registration</button>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+<div id="root">
 
-<form action="/logout" class="form-inline my-2 my-lg-0 flex-g-1">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
-</form>
+</div>
 </body>
 </html>

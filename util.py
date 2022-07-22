@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import jsonify
+
 import bcrypt
 
 
@@ -9,6 +10,7 @@ def json_response(func):
     :param func:
     :return:
     """
+
     @wraps(func)
     def decorated_function(*args, **kwargs):
         return jsonify(func(*args, **kwargs))
