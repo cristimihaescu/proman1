@@ -7,7 +7,7 @@ import util
 import mimetypes
 import queries
 
-mimetypes.add_type('application/javascript', '.js')
+mimetypes.add_type("application/javascript", ".js")
 app = Flask(__name__)
 load_dotenv()
 app.secret_key = b'_5#y2L"F4Q8zxec]/'
@@ -17,10 +17,9 @@ app.secret_key = b'_5#y2L"F4Q8zxec]/'
 def index():
     if "username" in session:
         username = escape(session["username"])
-        user = queries.get_existing_user(escape(session["username"]))
         boards = queries.get_boards()
         return render_template("index.html", username=username, boards=boards)
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -47,14 +46,13 @@ def login():
         if util.verify_password(form_password, user.get("password")):
             session["username"] = request.form["username"]
             return redirect(url_for("index"))
-        else:
-            return render_template("login.html", errorMessage=True)
+        return render_template("login.html", errorMessage=True)
     return render_template("login.html", errorMessage=False)
 
 
 @app.route("/logout", methods=["GET"])
 def logout():
-    session.pop("username", None)
+    session.clear()
     return redirect(url_for("index"))
 
 
@@ -107,12 +105,14 @@ def get_default_statuses():
 @app.route("/api/get_statuses/<int:board_id>")
 @json_response
 def get_statuses_by_id(board_id):
-    status_ids = [status['status_id'] for status in queries.get_statuses_by_board_id(board_id)]
+    status_ids = [
+        status["status_id"] for status in queries.get_statuses_by_board_id(board_id)
+    ]
     statuses_by_name_and_id = queries.get_statuses_by_status_id(status_ids)
     return statuses_by_name_and_id
 
 
-@app.route("/api/update_status_title", methods=['POST'])
+@app.route("/api/update_status_title", methods=["POST"])
 @json_response
 def update_status_title():
     status_id = request.get_json()["status_id"]
@@ -167,8 +167,11 @@ def get_user_id():
 @app.route("/api/get_boards/<user_id>")
 @json_response
 def get_boards_for_user_id(user_id):
-    boards = queries.get_public_boards() if user_id == "-1" else queries.get_boards_by_user_id(user_id)
-    return boards
+    return (
+        queries.get_public_boards()
+        if user_id == "-1"
+        else queries.get_boards_by_user_id(user_id)
+    )
 
 
 @app.route("/api/delete-board", methods=["POST"])
@@ -182,14 +185,20 @@ def delete_board():
 
 @app.route("/api/delete-status", methods=["POST"])
 def delete_status():
-    board_id, status_id = request.get_json()["board_id"], request.get_json()["status_id"]
-    deleted_relation = queries.delete_status_board_connection_by_ids(board_id, status_id)
+    board_id, status_id = (
+        request.get_json()["board_id"],
+        request.get_json()["status_id"],
+    )
+    deleted_relation = queries.delete_status_board_connection_by_ids(
+        board_id,
+        status_id,
+    )
     if int(status_id) not in [1, 2, 3, 4]:
         queries.delete_status_by_id(status_id)
     return {"relation": deleted_relation}
 
 
-@app.route('/api/delete-card', methods=["POST"])
+@app.route("/api/delete-card", methods=["POST"])
 @json_response
 def delete_card_from_db():
     card_id = request.get_json()["cardId"]
@@ -197,13 +206,15 @@ def delete_card_from_db():
 
 
 def main():
-    app.run(debug=True,
-            port=5001)
+    app.run(debug=True, port=5001)
 
     # Serving the favicon
     with app.app_context():
-        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+        app.add_url_rule(
+            "/favicon.ico",
+            redirect_to=url_for("static", filename="favicon/favicon.ico"),
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
