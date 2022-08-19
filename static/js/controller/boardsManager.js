@@ -1,5 +1,5 @@
-import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
-import {domManager} from "../view/domManager.js";
+import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
+import { domManager } from "../view/domManager.js";
 import {
     addNewBoard,
     renameBoard,
@@ -7,10 +7,9 @@ import {
     deleteBoard,
 } from "../model/board.js";
 import statusBoardManager from "./statusManager.js";
-import {addNewStatus} from "../model/status.js";
-import {setUpDropTargets} from "../model/cards.js";
+import { addNewStatus } from "../model/status.js";
+import { setUpDropTargets } from "../model/cards.js";
 import util from "../util/util.js";
-
 
 export let boardsManager = {
     loadBoards: async function () {
@@ -31,9 +30,10 @@ export let boardsManager = {
 
 export function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    document.querySelector(`.status-container[data-board-id="${boardId}"]`).classList.toggle("invisible");
+    document
+        .querySelector(`.status-container[data-board-id="${boardId}"]`)
+        .classList.toggle("invisible");
 }
-
 
 function setUpBoardEvents(board) {
     domManager.addEventListener(
@@ -43,12 +43,14 @@ function setUpBoardEvents(board) {
     );
     domManager.addEventListener(
         `.add-new-status-button[data-board-id="${board.id}"`,
-        'click',
-        addNewStatus);
+        "click",
+        addNewStatus
+    );
     domManager.addEventListener(
         `.delete-board[data-board-id="${board.id}"`,
-        'click',
-        deleteBoard);
+        "click",
+        deleteBoard
+    );
 }
 
 function setUpPageEvents() {

@@ -1,6 +1,6 @@
 export const htmlTemplates = {
     board: 1,
-    card: 2
+    card: 2,
 };
 
 export function htmlFactory(template) {
@@ -20,7 +20,7 @@ export function htmlFactory(template) {
 function boardBuilder(board) {
     return `<div class="board-container">
                 <div class="board-header">
-                    <div class="board" data-board-id=${board.id}>${board.title}</div>
+                    <div class="board" data-board-id="${board.id}">${board.title}</div>
                     <div class="board-menu-wrapper">
                         <button class="add-new-status-button invisible" data-board-id="${board.id}">Add New Status</button>
                         <button class="toggle-board-button" data-board-id="${board.id}"><i class="fas fa-chevron-down"></i></button>
@@ -28,7 +28,6 @@ function boardBuilder(board) {
                     </div>
                 </div>
                 <div class="status-container" data-board-id="${board.id}">
-                    
                 </div>
             </div>`;
 }
